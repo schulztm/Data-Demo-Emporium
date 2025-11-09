@@ -1,0 +1,69 @@
+--DATABASES (i.e. the "structured storage area" for data. Broadly, that structure is:
+--Database > Schema > Table with Columns & Rows)
+
+
+
+--1. CREATING AND POPULATING A DATABASE.
+--For this, I've yanked a few publically-available CSV files that are referenced in this tutorial:
+--https://docs.getdbt.com/guides/snowflake
+
+create database big_ol_database;
+create schema big_ol_database.jaffle_shop;
+--NOTE: "jaffle_shop" is the name from AWS
+
+create table big_ol_database.jaffle_shop.customers 
+( id integer,
+  first_name varchar,
+  last_name varchar
+);
+
+copy into big_ol_database.jaffle_shop.customers (id, first_name, last_name)
+from 's3://dbt-tutorial-public/jaffle_shop_customers.csv'
+file_format = (
+    type = 'CSV'
+    field_delimiter = ','
+    skip_header = 1
+    );
+
+create table big_ol_database.jaffle_shop.orders
+( id integer,
+  user_id integer,
+  order_date date,
+  status varchar,
+  _etl_loaded_at timestamp default current_timestamp
+);
+
+copy into big_ol_database.jaffle_shop.orders (id, user_id, order_date, status)
+from 's3://dbt-tutorial-public/jaffle_shop_orders.csv'
+file_format = (
+    type = 'CSV'
+    field_delimiter = ','
+    skip_header = 1
+    );
+
+
+    
+--2. VALIDATING
+
+DESCRIBE DATABASE big_ol_database;
+--https://docs.snowflake.com/en/sql-reference/sql/desc-database
+
+DESCRIBE SCHEMA big_ol_database.jaffle_shop;
+--https://docs.snowflake.com/en/sql-reference/sql/desc-schema
+
+SELECT *
+FROM big_ol_database.jaffle_shop.customers;
+
+SELECT *
+FROM big_ol_database.jaffle_shop.orders;
+
+
+
+--3. DROPPING & UNDROPPING
+
+DROP DATABASE big_ol_database RESTRICT;
+--https://docs.snowflake.com/en/sql-reference/sql/drop-database
+--NOTE: "RESTRICT" will stop the drop if a different table is referencing this as a "foreign key"
+
+UNDROP DATABASE big_ol_database;
+--https://docs.snowflake.com/en/sql-reference/sql/undrop-database
