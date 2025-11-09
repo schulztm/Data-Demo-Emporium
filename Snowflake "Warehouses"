@@ -1,0 +1,36 @@
+--WAREHOUSES (i.e. in Showflake, this is the "engine" processing queries against the database(s))
+--https://docs.snowflake.com/en/user-guide/warehouses-overview
+
+
+
+--1. CREATE, ALTER, DROP, & REPLACE
+--NOTE: CREATE, REPLACE, and ALTER use the same paramters; "CREATE OR REPLACE" is valid.
+
+CREATE OR REPLACE WAREHOUSE "Thomas-Warehouse-Ultimate-Power"
+  WITH
+    WAREHOUSE_TYPE = 'STANDARD'
+    WAREHOUSE_SIZE = 'XSMALL'
+    RESOURCE_CONSTRAINT = 'STANDARD_GEN_1';
+--https://docs.snowflake.com/en/sql-reference/sql/create-warehouse
+--https://docs.snowflake.com/en/sql-reference/sql/alter-warehouse
+
+DROP WAREHOUSE "Thomas-Warehouse-Ultimate-Power";
+--https://docs.snowflake.com/en/sql-reference/sql/drop-warehouse
+
+
+
+--2. SHOW & DESCRIBE
+
+SHOW WAREHOUSES;
+--https://docs.snowflake.com/en/sql-reference/sql/show-warehouses
+
+DESCRIBE WAREHOUSE "Thomas-Warehouse-Ultimate-Power";
+--https://docs.snowflake.com/en/sql-reference/sql/desc-warehouse
+
+
+
+--3. USE WAREHOUSE
+--NOTE: This can also be adjusted in the GUI
+
+USE WAREHOUSE "Thomas-Warehouse-Ultimate-Power";
+--https://docs.snowflake.com/en/sql-reference/sql/use-warehouse
